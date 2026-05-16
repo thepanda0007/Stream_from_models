@@ -1,11 +1,11 @@
 {
   "prompt": "Explain recursion",
   "model_a": {
-    "name": "gpt-4o",
+    "name": "model1",
     "text": "Recursion is a programming technique where a function calls itself in order to solve a problem. Each call works on a smaller version of the original problem, and the process continues until it reaches a base case — a condition simple enough to solve directly without further recursion. For example, computing the factorial of a number can be done recursively: factorial(n) calls factorial(n-1), which calls factorial(n-2), and so on, until it reaches factorial(0), which returns 1. The results then unwind back up the call stack, multiplying along the way. Recursion is elegant but requires careful design to avoid infinite loops and stack overflow errors."
   },
   "model_b": {
-    "name": "claude",
+    "name": "model2",
     "text": "Recursion is when a function solves a problem by calling itself with a simpler version of the same input. The key idea is that every recursive function needs two things: a base case that stops the recursion, and a recursive case that breaks the problem down further. Take computing a factorial — factorial(5) becomes 5 times factorial(4), which becomes 4 times factorial(3), and this continues until factorial(0) returns 1. From there, each call resolves back in reverse order. While recursion can make code cleaner and more intuitive for certain problems like tree traversal or divide-and-conquer algorithms, it comes with a cost: each function call occupies space on the call stack, so deeply recursive functions risk a stack overflow."
   }
 }
