@@ -8,7 +8,6 @@ import random
 import json
 
 app = FastAPI()
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,29 +17,32 @@ app.add_middleware(
 
 ANSWERS_FILE = Path("answers.json")
 
-
 class PromptRequest(BaseModel):
     prompt: str
 
-
 def sse(model: str, text: str) -> str:
     return f"data: {json.dumps({'model': model, 'text': text})}\n\n"
-
 
 @app.get("/")
 async def root():
     return {"status": "ok"}
 
-
 @app.post("/stream")
 async def stream_both(req: PromptRequest):
     if not ANSWERS_FILE.exists():
         raise HTTPException(status_code=500, detail="answers.json not found")
-
     try:
         data = json.loads(ANSWERS_FILE.read_text())
     except json.JSONDecodeError:
         raise HTTPException(status_code=500, detail="answers.json is invalid JSON")
+
+    # Find matching entry by prompt (case-insensitive)
+    entry = next(
+        (item for item in data if item["prompt"].strip().lower() == req.prompt.strip().lower()),
+        None
+    )
+    if entry is None:
+        raise HTTPException(status_code=404, detail=f"No answer found for prompt: '{req.prompt}'")
 
     async def generate():
         queue: asyncio.Queue[str | None] = asyncio.Queue()
@@ -52,16 +54,16 @@ async def stream_both(req: PromptRequest):
             await queue.put(None)
 
         async with asyncio.TaskGroup() as tg:
-            tg.create_task(pump(data["model_a"]["name"], data["model_a"]["text"]))
-            tg.create_task(pump(data["model_b"]["name"], data["model_b"]["text"]))
+            tg.create_task(pump(entry["model_a"]["name"], entry["model_a"]["text"]))
+            tg.create_task(pump(entry["model_b"]["name"], entry["model_b"]["text"]))
 
-            done = 0
-            while done < 2:
-                item = await queue.get()
-                if item is None:
-                    done += 1
-                else:
-                    yield item
+        done = 0
+        while done < 2:
+            item = await queue.get()
+            if item is None:
+                done += 1
+            else:
+                yield item
 
         yield f"data: {json.dumps({'model': 'both', 'done': True})}\n\n"
 
