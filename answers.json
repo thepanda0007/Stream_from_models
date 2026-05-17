@@ -1,11 +1,57 @@
-{
-  "prompt": "Explain recursion",
-  "model_a": {
-    "name": "model1",
-    "text": "Recursion is a programming technique where a function calls itself in order to solve a problem. Each call works on a smaller version of the original problem, and the process continues until it reaches a base case — a condition simple enough to solve directly without further recursion. For example, computing the factorial of a number can be done recursively: factorial(n) calls factorial(n-1), which calls factorial(n-2), and so on, until it reaches factorial(0), which returns 1. The results then unwind back up the call stack, multiplying along the way. Recursion is elegant but requires careful design to avoid infinite loops and stack overflow errors."
+[
+  {
+    "prompt": "What is polymorphism in object-oriented programming?",
+    "model_a": {
+      "name": "model1",
+      "text": "Polymorphism is an object-oriented programming concept where the same method or function can behave differently depending on the object calling it. For example, a method named draw() may produce different outputs for a Circle, Rectangle, or Triangle class. This allows developers to write flexible and reusable code by relying on common interfaces rather than specific implementations. Polymorphism is commonly achieved through method overriding and inheritance."
+    },
+    "model_b": {
+      "name": "model2",
+      "text": "Polymorphism in object-oriented programming means that a single method or interface can perform different actions depending on the object using it. For instance, a draw() method might behave differently for Circle, Rectangle, or Triangle objects. This makes code more reusable and easier to extend because programs can interact with objects through shared interfaces instead of fixed implementations. Polymorphism is typically implemented using inheritance and method overriding."
+    }
   },
-  "model_b": {
-    "name": "model2",
-    "text": "Recursion is when a function solves a problem by calling itself with a simpler version of the same input. The key idea is that every recursive function needs two things: a base case that stops the recursion, and a recursive case that breaks the problem down further. Take computing a factorial — factorial(5) becomes 5 times factorial(4), which becomes 4 times factorial(3), and this continues until factorial(0) returns 1. From there, each call resolves back in reverse order. While recursion can make code cleaner and more intuitive for certain problems like tree traversal or divide-and-conquer algorithms, it comes with a cost: each function call occupies space on the call stack, so deeply recursive functions risk a stack overflow."
+  {
+    "prompt": "Explain how binary search works.",
+    "model_a": {
+      "name": "model1",
+      "text": "Binary search is an efficient algorithm used to find an element in a sorted array. It works by repeatedly dividing the search range in half. First, the algorithm checks the middle element of the array. If the target value matches the middle element, the search ends. If the target is smaller, the algorithm continues searching in the left half; otherwise, it searches in the right half. This process repeats until the value is found or the range becomes empty. Binary search has a time complexity of O(log n)."
+    },
+    "model_b": {
+      "name": "model2",
+      "text": "Binary search is a fast searching algorithm for sorted arrays that works by continuously halving the search space. The algorithm begins by examining the middle element. If the middle value equals the target, the search is complete. If the target is smaller, the search proceeds in the left portion of the array; otherwise, it continues in the right portion. The process repeats until the element is located or no elements remain. Because the search space is cut in half each step, binary search runs in O(log n) time."
+    }
+  },
+  {
+    "prompt": "What is a database index?",
+    "model_a": {
+      "name": "model1",
+      "text": "A database index is a data structure that improves the speed of data retrieval operations on a database table. Instead of scanning every row, the database can use the index to quickly locate matching records. Indexes are typically created on columns that are frequently searched, filtered, or sorted. While indexes improve read performance, they also require extra storage space and can slow down insert, update, and delete operations because the index must be maintained."
+    },
+    "model_b": {
+      "name": "model2",
+      "text": "A database index is a structure used to speed up queries on a database table. Rather than checking every row one by one, the database uses the index to efficiently find the required records. Indexes are usually added to columns that are commonly searched or sorted. Although indexes can greatly improve read performance, they consume additional storage and may reduce write performance because the index needs to be updated whenever data changes."
+    }
+  },
+  {
+    "prompt": "Explain the purpose of caching.",
+    "model_a": {
+      "name": "model1",
+      "text": "Caching is a technique used to store frequently accessed data in a temporary storage area so it can be retrieved faster in the future. Instead of repeatedly performing expensive computations or database queries, applications can reuse cached results. This improves performance, reduces latency, and decreases the load on backend systems. Common examples include browser caching, CDN caching, and in-memory application caches like Redis."
+    },
+    "model_b": {
+      "name": "model2",
+      "text": "Caching is the process of temporarily storing frequently used data so future requests can be served more quickly. Rather than recomputing results or repeatedly querying a database, applications can return cached data directly. This helps reduce response times, improves overall performance, and lowers the workload on servers or databases. Examples of caching include browser caches, content delivery networks, and in-memory systems such as Redis."
+    }
+  },
+  {
+    "prompt": "What is the difference between HTTP and HTTPS?",
+    "model_a": {
+      "name": "model1",
+      "text": "HTTP, or HyperText Transfer Protocol, is the standard protocol used for communication between web browsers and servers. HTTPS is the secure version of HTTP that uses SSL/TLS encryption to protect transmitted data. With HTTPS, sensitive information such as passwords and payment details is encrypted, preventing attackers from intercepting it. Modern websites commonly use HTTPS because it improves both security and user trust."
+    },
+    "model_b": {
+      "name": "model2",
+      "text": "HTTP stands for HyperText Transfer Protocol and is used for transferring data between browsers and web servers. HTTPS is a secure form of HTTP that adds SSL/TLS encryption to protect the exchanged information. This encryption helps keep data like passwords, personal details, and payment information safe from interception. Today, most websites use HTTPS to provide stronger security and increase user confidence."
+    }
   }
-}
+]
