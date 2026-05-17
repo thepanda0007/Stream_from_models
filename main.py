@@ -16,6 +16,7 @@ app.add_middleware(
 )
 
 ANSWERS_FILE = Path("answers.json")
+ANSWERS_DATA = []
 
 class PromptRequest(BaseModel):
     prompt: str
@@ -23,25 +24,29 @@ class PromptRequest(BaseModel):
 def sse(model: str, text: str) -> str:
     return f"data: {json.dumps({'model': model, 'text': text})}\n\n"
 
+@app.on_event("startup")
+async def load_data():
+    global ANSWERS_DATA
+    ANSWERS_DATA = json.loads(ANSWERS_FILE.read_text())
+
 @app.get("/")
 async def root():
     return {"status": "ok"}
 
 @app.post("/stream")
 async def stream_both(req: PromptRequest):
-    if not ANSWERS_FILE.exists():
-        raise HTTPException(status_code=500, detail="answers.json not found")
-    try:
-        data = json.loads(ANSWERS_FILE.read_text())
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=500, detail="answers.json is invalid JSON")
-
     entry = next(
-        (item for item in data if item["prompt"].strip().lower() == req.prompt.strip().lower()),
+        (item for item in ANSWERS_DATA if item["prompt"].strip().lower() == req.prompt.strip().lower()),
         None
     )
     if entry is None:
         raise HTTPException(status_code=404, detail=f"No answer found for prompt: '{req.prompt}'")
+
+    # Capture these BEFORE entering the generator
+    model_a_name = entry["model_a"]["name"]
+    model_a_text = entry["model_a"]["text"]
+    model_b_name = entry["model_b"]["name"]
+    model_b_text = entry["model_b"]["text"]
 
     async def generate():
         queue: asyncio.Queue[str | None] = asyncio.Queue()
@@ -52,11 +57,11 @@ async def stream_both(req: PromptRequest):
                 await asyncio.sleep(random.uniform(0.03, 0.08))
             await queue.put(None)
 
-        # Start both pumps as background tasks (non-blocking)
-        asyncio.create_task(pump(entry["model_a"]["name"], entry["model_a"]["text"]))
-        asyncio.create_task(pump(entry["model_b"]["name"], entry["model_b"]["text"]))
+        # Create tasks INSIDE the coroutine, not inside async generator
+        loop = asyncio.get_event_loop()
+        loop.create_task(pump(model_a_name, model_a_text))
+        loop.create_task(pump(model_b_name, model_b_text))
 
-        # Drain queue in real time as pumps are running
         done = 0
         while done < 2:
             item = await queue.get()
