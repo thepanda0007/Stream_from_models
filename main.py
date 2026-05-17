@@ -36,7 +36,6 @@ async def stream_both(req: PromptRequest):
     except json.JSONDecodeError:
         raise HTTPException(status_code=500, detail="answers.json is invalid JSON")
 
-    # Find matching entry by prompt (case-insensitive)
     entry = next(
         (item for item in data if item["prompt"].strip().lower() == req.prompt.strip().lower()),
         None
@@ -53,10 +52,11 @@ async def stream_both(req: PromptRequest):
                 await asyncio.sleep(random.uniform(0.03, 0.08))
             await queue.put(None)
 
-        async with asyncio.TaskGroup() as tg:
-            tg.create_task(pump(entry["model_a"]["name"], entry["model_a"]["text"]))
-            tg.create_task(pump(entry["model_b"]["name"], entry["model_b"]["text"]))
+        # Start both pumps as background tasks (non-blocking)
+        asyncio.create_task(pump(entry["model_a"]["name"], entry["model_a"]["text"]))
+        asyncio.create_task(pump(entry["model_b"]["name"], entry["model_b"]["text"]))
 
+        # Drain queue in real time as pumps are running
         done = 0
         while done < 2:
             item = await queue.get()
