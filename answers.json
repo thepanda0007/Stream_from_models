@@ -1,6 +1,6 @@
 [
   {
-    "prompt": "What is polymorphism in object-oriented programming?",
+    "prompt": "What is polymorphism in object-oriented programming",
     "model_a": {
       "name": "model1",
       "text": "Polymorphism is an object-oriented programming concept where the same method or function can behave differently depending on the object calling it. For example, a method named draw() may produce different outputs for a Circle, Rectangle, or Triangle class. This allows developers to write flexible and reusable code by relying on common interfaces rather than specific implementations. Polymorphism is commonly achieved through method overriding and inheritance."
@@ -22,7 +22,7 @@
     }
   },
   {
-    "prompt": "What is a database index?",
+    "prompt": "What is a database index",
     "model_a": {
       "name": "model1",
       "text": "A database index is a data structure that improves the speed of data retrieval operations on a database table. Instead of scanning every row, the database can use the index to quickly locate matching records. Indexes are typically created on columns that are frequently searched, filtered, or sorted. While indexes improve read performance, they also require extra storage space and can slow down insert, update, and delete operations because the index must be maintained."
@@ -33,7 +33,7 @@
     }
   },
   {
-    "prompt": "Explain the purpose of caching.",
+    "prompt": "Explain the purpose of caching",
     "model_a": {
       "name": "model1",
       "text": "Caching is a technique used to store frequently accessed data in a temporary storage area so it can be retrieved faster in the future. Instead of repeatedly performing expensive computations or database queries, applications can reuse cached results. This improves performance, reduces latency, and decreases the load on backend systems. Common examples include browser caching, CDN caching, and in-memory application caches like Redis."
